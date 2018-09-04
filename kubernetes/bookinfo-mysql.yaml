@@ -1,0 +1,51 @@
+##################################################################################################
+# Mysql db services
+# credentials: root/Welcome#1
+##################################################################################################
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-credentials
+type: Opaque
+data:
+  rootpasswd: V2VsY29tZSMx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysqldb
+  labels:
+    app: mysqldb
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  selector:
+    app: mysqldb
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mysqldb-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysqldb
+        version: v1
+    spec:
+      containers:
+      - name: mysqldb
+        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-mysqldb:v0.1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-credentials
+                key: rootpasswd
+      imagePullSecrets:
+      - name: soepoc-secret
