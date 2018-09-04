@@ -26,35 +26,21 @@ VERSION=$1
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 pushd "$SCRIPTDIR/productpage"
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage-v1:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage-v1:latest .
-popd
-
-pushd "$SCRIPTDIR/details"
-  #plain build -- no calling external book service to fetch topics
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-details-v1:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-details-v1:latest --build-arg service_version=v1 .
-  #with calling external book service to fetch topic for the book
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-details-v2:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-details-v2:latest --build-arg service_version=v2 \
-	 --build-arg enable_external_book_service=true .
+  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage:latest .
 popd
 
 pushd "$SCRIPTDIR/reviews"
   #java build the app.
   docker run --rm -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
   pushd reviews-wlpcfg
-    #plain build -- no ratings
-    docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews-v1:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews-v1:latest --build-arg service_version=v1 .
-    #with ratings black stars
-    docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews-v2:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews-v2:latest --build-arg service_version=v2 \
-	   --build-arg enable_ratings=true .
     #with ratings red stars
-    docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews-v3:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews-v3:latest --build-arg service_version=v3 \
+    docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews:latest --build-arg service_version=v3 \
 	   --build-arg enable_ratings=true --build-arg star_color=red .
   popd
 popd
 
 pushd "$SCRIPTDIR/ratings"
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings-v1:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings-v1:latest --build-arg service_version=v1 .
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings-v2:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings-v2:latest --build-arg service_version=v2 .
+  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings:latest --build-arg service_version=v2 .
 popd
 
 pushd "$SCRIPTDIR/mysql"

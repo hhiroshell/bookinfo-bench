@@ -31,18 +31,17 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ratings-v2-mysql
+  name: ratings-mysql
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: ratings
-        version: v2-mysql
     spec:
       containers:
       - name: ratings
-        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings-v2:v0.1.0
+        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings:v1.0.0
         imagePullPolicy: IfNotPresent
         env:
           # ratings-v2 will use mongodb as the default db backend.
@@ -84,18 +83,17 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: reviews-v2
+  name: reviews
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: reviews
-        version: v2
     spec:
       containers:
       - name: reviews
-        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews-v2:v0.1.0
+        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -128,18 +126,17 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: productpage-v1
+  name: productpage
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: productpage
-        version: v1
     spec:
       containers:
       - name: productpage
-        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage-v1:v0.1.0
+        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080

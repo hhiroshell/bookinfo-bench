@@ -26,18 +26,17 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: mysqldb-v1
+  name: mysqldb
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         app: mysqldb
-        version: v1
     spec:
       containers:
       - name: mysqldb
-        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-mysqldb:v0.1.0
+        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-mysqldb:v1.0.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3306
