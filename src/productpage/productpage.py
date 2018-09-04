@@ -50,12 +50,6 @@ Bootstrap(app)
 
 servicesDomain = "" if (os.environ.get("SERVICES_DOMAIN") == None) else "." + os.environ.get("SERVICES_DOMAIN")
 
-details = {
-    "name" : "http://details{0}:9080".format(servicesDomain),
-    "endpoint" : "details",
-    "children" : []
-}
-
 ratings = {
     "name" : "http://ratings{0}:9080".format(servicesDomain),
     "endpoint" : "ratings",
@@ -71,12 +65,11 @@ reviews = {
 productpage = {
     "name" : "http://details{0}:9080".format(servicesDomain),
     "endpoint" : "details",
-    "children" : [details, reviews]
+    "children" : [reviews]
 }
 
 service_dict = {
     "productpage" : productpage,
-    "details" : details,
     "reviews" : reviews,
 }
 
@@ -143,14 +136,11 @@ def front():
     headers = getForwardHeaders(request)
     user = session.get('user', '')
     product = getProduct(product_id)
-    detailsStatus, details = getProductDetails(product_id, headers)
     reviewsStatus, reviews = getProductReviews(product_id, headers)
     return render_template(
         'productpage.html',
-        detailsStatus=detailsStatus,
         reviewsStatus=reviewsStatus,
         product=product,
-        details=details,
         reviews=reviews,
         user=user)
 
@@ -159,13 +149,6 @@ def front():
 @app.route('/api/v1/products')
 def productsRoute():
     return json.dumps(getProducts()), 200, {'Content-Type': 'application/json'}
-
-
-@app.route('/api/v1/products/<product_id>')
-def productRoute(product_id):
-    headers = getForwardHeaders(request)
-    status, details = getProductDetails(product_id, headers)
-    return json.dumps(details), status, {'Content-Type': 'application/json'}
 
 
 @app.route('/api/v1/products/<product_id>/reviews')
@@ -180,7 +163,6 @@ def ratingsRoute(product_id):
     headers = getForwardHeaders(request)
     status, ratings = getProductRatings(product_id, headers)
     return json.dumps(ratings), status, {'Content-Type': 'application/json'}
-
 
 
 # Data providers:
@@ -200,19 +182,6 @@ def getProduct(product_id):
         return None
     else:
         return products[product_id]
-
-
-def getProductDetails(product_id, headers):
-    try:
-        url = details['name'] + "/" + details['endpoint'] + "/" + str(product_id)
-        res = requests.get(url, headers=headers, timeout=3.0)
-    except:
-        res = None
-    if res and res.status_code == 200:
-        return 200, res.json()
-    else:
-        status = res.status_code if res is not None and res.status_code else 500
-        return status, {'error': 'Sorry, product details are currently unavailable for this book.'}
 
 
 def getProductReviews(product_id, headers):
