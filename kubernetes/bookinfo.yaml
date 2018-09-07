@@ -109,19 +109,25 @@ metadata:
   name: productpage
   labels:
     app: productpage
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-shape: 400Mbps
 spec:
-  #ports:
-  #- port: 9080
-    #name: http
-  #selector:
-    #app: productpage
-  type: NodePort
+  type: LoadBalancer
   ports:
-    - port: 9080
-      nodePort: 30080
-      name: http
+  - name: http
+    port: 80
+    targetPort: 9080
   selector:
     app: productpage
+# Use only for local testing.
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 9080
+#       nodePort: 30080
+#       name: http
+#   selector:
+#     app: productpage
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
