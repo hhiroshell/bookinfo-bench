@@ -33,7 +33,7 @@ kind: Deployment
 metadata:
   name: ratings-mysql
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -61,6 +61,16 @@ spec:
             value: Welcome#1
         ports:
         - containerPort: 9080
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - ratings
+            topologyKey: failure-domain.beta.kubernetes.io/zone
       imagePullSecrets:
       - name: soepoc-secret
 ---
@@ -85,7 +95,7 @@ kind: Deployment
 metadata:
   name: reviews
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -97,6 +107,16 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - reviews
+            topologyKey: failure-domain.beta.kubernetes.io/zone
       imagePullSecrets:
       - name: soepoc-secret
 ---
@@ -134,7 +154,7 @@ kind: Deployment
 metadata:
   name: productpage
 spec:
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -146,5 +166,15 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - productpage
+            topologyKey: failure-domain.beta.kubernetes.io/zone
       imagePullSecrets:
       - name: soepoc-secret
