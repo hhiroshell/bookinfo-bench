@@ -160,7 +160,7 @@ MySQL CSインスタンスのプロビジョニングが始まります。MySQL 
 
 ここまでで、MySQLデータベースのセットアップは完了です。続けて、Kubernetesクラスター上にこのデータベースにアクセスするためのServiceオブジェクトを作成します。
 
-このServiceオブジェクトを定義したmanifestファイルは、./kubernetes/bookinfo-mysql-external.yamlです。このファイルをテキストエディタ等をで開き、22行目にあるIPアドレスをMySQL CSインスタンスのIPアドレスに修正してください。
+このServiceオブジェクトを定義したmanifestファイルは、./kubernetes/bookinfo-mysql-external.yamlです。このファイルをテキストエディタ等をで開き、12行目にあるIPアドレスをMySQL CSインスタンスのIPアドレスに修正してください。
 
 ```yaml
 #######################################################
@@ -172,22 +172,9 @@ kind: Service
 metadata:
   name: mysqldb
 spec:
-  type: ClusterIP
-  ports:
-    - protocol: TCP
-      port: 3306
----
-kind: Endpoints
-apiVersion: v1
-metadata:
-  name: mysqldb
-subsets:
-  - addresses:
-    # FIXME: use the right IP
-    - ip: 129.213.135.242
-    ports:
-      - protocol: TCP
-        port: 3306
+  type: ExternalName
+  # FIXME: use the right IP
+  externalName: 129.213.135.242
 ```
 
 ``kubectl``コマンドで、このmanifestファイルをKubernetesクラスターに適用します。
