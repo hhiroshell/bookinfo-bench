@@ -9,8 +9,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - protocol: TCP
-      port: 3306
+  - protocol: TCP
+    port: 3306
 ---
 kind: Endpoints
 apiVersion: v1
@@ -21,5 +21,51 @@ subsets:
     # FIXME: use the right IP
     - ip: 129.213.135.242
     ports:
-      - protocol: TCP
-        port: 3306
+    - protocol: TCP
+      port: 3306
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysqldb-init
+data:
+  mysqlcs-init.sql: |
+    DROP DATABASE IF EXISTS test;
+    CREATE DATABASE test;
+    USE test;
+
+    CREATE TABLE `ratings` (
+      `ReviewID` INT NOT NULL,
+      `Rating` INT,
+      PRIMARY KEY (`ReviewID`)
+    );
+    INSERT INTO ratings (ReviewID, Rating) VALUES (1, 5);
+    INSERT INTO ratings (ReviewID, Rating) VALUES (2, 4);
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysqldb-init
+spec:
+  template:
+    spec:
+      initContainers:
+       - name: init-mydb
+         image: busybox
+         command: ['/bin/sh', '-c']
+         args: ['until nslookup mysqldb; do echo waiting for mysqldb; sleep 2; done;']
+      containers:
+      - name: mysqldb-init
+        image: mysql:8.0.3
+        command: ["/bin/sh", "-c"]
+        args:
+        - mysql -hmysqldb -uroot -pWelcome#1 < /tmp/mysqlcs-init.sql;
+        volumeMounts:
+        - name: mysqldb-init-sql
+          mountPath: /tmp
+      volumes:
+      - name: mysqldb-init-sql
+        configMap:
+          name: mysqldb-init
+      restartPolicy: Never
+  backoffLimit: 4

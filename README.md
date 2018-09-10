@@ -158,29 +158,6 @@ MySQL CSインスタンスのプロビジョニングが始まります。MySQL 
 
 ![](./images/08.png)
 
-次にbookinfo-benchが利用するためのデータを、MySQLインスタンスに投入します。
-
-データを投入するための.sqlファイルは、./kubernetes/mysqlcs-init.sqlです。これを、任意のMySQLのクライアントから、MySQL CSインスタンスに接続して実行することでデータの投入が完了します。
-
-ここでは、コマンドラインのMySQLクライアント（mysqlコマンド）を使ってこの作業を実施してみます。
-
-Mac OSのマシンを利用している場合、homebrewをインストールした上で、以下のコマンドを実行してください。
-
-    brew install mysql --client-only
-
-Ubuntuなど、apt-getが利用可能なマシンの場合は、以下のコマンドを実行してください。
-
-    apt-get -y install mysql-client
-
-続いて、MySQL CSインスタンスに接続した上で、先の.sqlファイルを実行します。
-
-```
-    mysql -h[MySQL CSインスタンスのIP] -uroot -pWelcome#1
-```
-```
-    mysql> source ./kubernetes/mysqlcs-init.sql
-```
-
 ここまでで、MySQLデータベースのセットアップは完了です。続けて、Kubernetesクラスター上にこのデータベースにアクセスするためのServiceオブジェクトを作成します。
 
 このServiceオブジェクトを定義したmanifestファイルは、./kubernetes/bookinfo-mysql-external.yamlです。このファイルをテキストエディタ等をで開き、22行目にあるIPアドレスをMySQL CSインスタンスのIPアドレスに修正してください。
