@@ -9,7 +9,7 @@ metadata:
 spec:
   type: ExternalName
   # FIXME: use the right IP
-  externalName: 129.213.135.242
+  externalName: 132.145.158.32
 ---
 apiVersion: v1
 kind: ConfigMap
