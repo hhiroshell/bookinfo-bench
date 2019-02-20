@@ -1,0 +1,4 @@
+.gradle
+reviews-application/build
+reviews-wlpcfg/.settings
+reviews-wlpcfg/servers/LibertyProjectServer/apps
