@@ -9,7 +9,7 @@ metadata:
 spec:
   type: ExternalName
   # FIXME: use the right IP
-  externalName: 132.145.158.32
+  externalName: 129.213.91.210
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -17,9 +17,9 @@ metadata:
   name: mysqldb-init
 data:
   mysqlcs-init.sql: |
-    DROP DATABASE IF EXISTS test;
-    CREATE DATABASE test;
-    USE test;
+    DROP DATABASE IF EXISTS ratings;
+    CREATE DATABASE ratings;
+    USE ratings;
 
     CREATE TABLE `ratings` (
       `ReviewID` INT NOT NULL,
@@ -46,10 +46,16 @@ spec:
         image: mysql:8.0.3
         command: ["/bin/sh", "-c"]
         args:
-        - mysql -hmysqldb -uroot -pWelcome#1 < /tmp/mysqlcs-init.sql;
+        - mysql -hmysqldb -uroot -p$MYSQL_ROOT_PASSWORD < /tmp/mysqlcs-init.sql;
         volumeMounts:
         - name: mysqldb-init-sql
           mountPath: /tmp
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: rootpasswd
       volumes:
       - name: mysqldb-init-sql
         configMap:

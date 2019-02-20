@@ -33,7 +33,7 @@ kind: Deployment
 metadata:
   name: ratings-mysql
 spec:
-  replicas: 104
+  replicas: 6
   template:
     metadata:
       labels:
@@ -41,14 +41,9 @@ spec:
     spec:
       containers:
       - name: ratings
-        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings:v1.0.0
-        imagePullPolicy: IfNotPresent
+        image: bookinfo-bench/examples-bookinfo-ratings:v1.0
+        imagePullPolicy: Always
         env:
-          # ratings-v2 will use mongodb as the default db backend.
-          # if you would like to use mysqldb then you can use this file
-          # which sets DB_TYPE = 'mysql' and the rest of the parameters shown
-          # here and also create the # mysqldb service using bookinfo-mysql.yaml
-          # NOTE: This file is mutually exclusive to bookinfo-ratings-v2.yaml
           - name: DB_TYPE
             value: "mysql"
           - name: MYSQL_DB_HOST
@@ -58,7 +53,10 @@ spec:
           - name: MYSQL_DB_USER
             value: root
           - name: MYSQL_DB_PASSWORD
-            value: Welcome#1
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: rootpasswd
         ports:
         - containerPort: 9080
       # affinity:
@@ -73,8 +71,8 @@ spec:
       #       topologyKey: failure-domain.beta.kubernetes.io/zone
       # nodeSelector:
       #   failure-domain.beta.kubernetes.io/zone: US-ASHBURN-AD-3
-      imagePullSecrets:
-      - name: soepoc-secret
+      # imagePullSecrets:
+      # - name: bookinfo-bench-ocir-secret
 ---
 ##################################################################################################
 # Reviews service
@@ -97,7 +95,7 @@ kind: Deployment
 metadata:
   name: reviews
 spec:
-  replicas: 104
+  replicas: 6
   template:
     metadata:
       labels:
@@ -105,8 +103,8 @@ spec:
     spec:
       containers:
       - name: reviews
-        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews:v1.0.0
-        imagePullPolicy: IfNotPresent
+        image: bookinfo-bench/examples-bookinfo-reviews:v1.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 9080
       # affinity:
@@ -121,8 +119,8 @@ spec:
       #       topologyKey: failure-domain.beta.kubernetes.io/zone
       # nodeSelector:
       #   failure-domain.beta.kubernetes.io/zone: US-ASHBURN-AD-2
-      imagePullSecrets:
-      - name: soepoc-secret
+      # imagePullSecrets:
+      # - name: bookinfo-bench-ocir-secret
 ---
 ##################################################################################################
 # Productpage services
@@ -137,7 +135,7 @@ metadata:
     service.beta.kubernetes.io/oci-load-balancer-shape: 8000Mbps
 spec:
   type: LoadBalancer
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local
   ports:
   - name: http
     port: 80
@@ -159,7 +157,7 @@ kind: Deployment
 metadata:
   name: productpage
 spec:
-  replicas: 104
+  replicas: 6
   template:
     metadata:
       labels:
@@ -167,8 +165,8 @@ spec:
     spec:
       containers:
       - name: productpage
-        image: iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage:v1.0.0
-        imagePullPolicy: IfNotPresent
+        image: bookinfo-bench/examples-bookinfo-productpage:v1.0
+        imagePullPolicy: Always
         ports:
         - containerPort: 9080
       # affinity:
@@ -183,5 +181,5 @@ spec:
       #       topologyKey: failure-domain.beta.kubernetes.io/zone
       # nodeSelector:
       #   failure-domain.beta.kubernetes.io/zone: US-ASHBURN-AD-1
-      imagePullSecrets:
-      - name: soepoc-secret
+      # imagePullSecrets:
+      # - name: bookinfo-bench-ocir-secret

@@ -50,7 +50,7 @@ dispatcher.onGet(/^\/ratings\/[0-9]*/, function (req, res) {
         port: portNumber,
         user: username,
         password: password,
-        database: 'test'
+        database: 'ratings'
       })
 
       connection.connect()

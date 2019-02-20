@@ -27,7 +27,7 @@ src/build-services.sh "${VERSION}"
 
 for v in ${VERSION} "latest"
 do
-  IMAGES+=$(docker images -f reference="iad.ocir.io/nttdocomo/soepoc/examples-bookinfo*" --format "{{.Repository}}:$v")
+  IMAGES+=$(docker images -f reference="bookinfo-bench/examples-bookinfo*" --format "{{.Repository}}:$v")
   IMAGES+=" "
 done
 

@@ -26,23 +26,25 @@ VERSION=$1
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 pushd "$SCRIPTDIR/productpage"
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-productpage:latest .
+  docker build -t "bookinfo-bench/examples-bookinfo-productpage:${VERSION}" -t bookinfo-bench/examples-bookinfo-productpage:latest .
 popd
 
 pushd "$SCRIPTDIR/reviews"
   #java build the app.
   docker run --rm -v "$(pwd)":/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
+  #Docker for Windows
+  #docker run --rm -v c:/Users/hhiroshell/Development/bookinfo-bench/bookinfo-bench/src/reviews:/home/gradle/project -w /home/gradle/project gradle:4.8.1 gradle clean build
   pushd reviews-wlpcfg
     #with ratings red stars
-    docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-reviews:latest --build-arg service_version=v3 \
+    docker build -t "bookinfo-bench/examples-bookinfo-reviews:${VERSION}" -t bookinfo-bench/examples-bookinfo-reviews:latest --build-arg service_version=v3 \
 	   --build-arg enable_ratings=true --build-arg star_color=red .
   popd
 popd
 
 pushd "$SCRIPTDIR/ratings"
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-ratings:latest --build-arg service_version=v2 .
+  docker build -t "bookinfo-bench/examples-bookinfo-ratings:${VERSION}" -t bookinfo-bench/examples-bookinfo-ratings:latest --build-arg service_version=v2 .
 popd
 
 pushd "$SCRIPTDIR/mysql"
-  docker build -t "iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-mysqldb:${VERSION}" -t iad.ocir.io/nttdocomo/soepoc/examples-bookinfo-mysqldb:latest .
+  docker build -t "bookinfo-bench/examples-bookinfo-mysqldb:${VERSION}" -t bookinfo-bench/examples-bookinfo-mysqldb:latest .
 popd
