@@ -1,0 +1,15 @@
+# OCI
+tenancy_ocid     = "ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+user_ocid        = "ocid1.user.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+fingerprint      = "00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff"
+private_key_path = "/home/user/.oci/oci_api_key.pem"
+compartment_ocid = "ocid1.compartment.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+region           = "us-ashburn-1"
+
+# Compute
+core_instance_name                 = "example"
+core_instance_shape                = "VM.Standard2.2"
+core_instance_availability_domain  = "TGjA:UK-LONDON-1-AD-1"
+core_instance_subnet_ocid          = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+core_instance_ssh_public_key_file  = "./ssh/ssh-key.pub"
+core_instance_ssh_private_key_file = "./ssh/ssh-key"

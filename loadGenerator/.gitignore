@@ -1,0 +1,7 @@
+.terraform
+.terraform.tfstate.lock.info
+oci/terraform.tfvars
+oci/terraform.tfstate
+oci/terraform.tfstate.backup
+oci/ssh/ssh-key
+oci/ssh/ssh-key.pub
